@@ -1,0 +1,21 @@
+# Use tester/tester as user/password credentials
+version: '2'
+
+services:
+
+  app:
+    build:
+      context: ..
+      dockerfile: ./docker/app/Dockerfile
+    ports:
+        - "80:80"
+        - "5000:5000"
+    volumes:
+      - ../app:/var/www/html/
+#
+#volumes:
+#  ..:
+
+networks:
+  code-network:
+    driver: bridge
