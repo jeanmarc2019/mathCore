@@ -1,4 +1,17 @@
+import json
 import random
+import urllib.request
+
+
+def oeis(q):
+    """Retrieve the OEIS accession data.
+    
+    Arguments:
+        q {[str]} -- [the A-number]
+    """
+    url = f"https://oeis.org/search?q=id:{q}&fmt=json"
+    with urllib.request.urlopen(url) as file:
+        return json.load(file)
 
 # generates portion of result from Cantor's diagonalization argument
 def countabilityProof():
