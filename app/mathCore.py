@@ -1,6 +1,13 @@
+#!/usr/bin/env python3
+
 import json
+import os
 import random
+import sys
 import urllib.request
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, FileType
+
+from midiutil import MIDIFile
 
 
 def oeis(q):
@@ -31,3 +38,37 @@ def countabilityProof():
             result += str(0)
 
     return result
+
+def parse_argv(argv):
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("file", type=FileType())
+    parser.add_argument("-out", help="the output file", nargs="?", type=FileType("wb"), default=os.fdopen(sys.stdout.fileno(), "wb", closefd=False))
+    parser.add_argument("-base", help="the base degree", type=int, default=60)
+    parser.add_argument("-separation", help="the separation time between notes", type=float, default=1.0)
+    parser.add_argument("-duration", help="the note duration in beats", type=float, default=1.0)
+    parser.add_argument("-volume", help="the volume in [0-127]", type=int, default=100)
+    parser.add_argument("-tempo", help="the tempo in BPM", type=int, default=100)
+    args = parser.parse_args(argv)
+    return args
+
+def main(argv):
+    args = parse_argv(argv[1:])
+    base = args.base
+
+    data = [args.base + int(line) for line in args.file]
+    degrees = set(data)
+    track, channel, time = 0, 0, 0
+
+    midi = MIDIFile(1)
+    midi.addTempo(track, time, args.tempo)
+
+    for i, pitch in enumerate(data):
+        midi.addNote(track, channel, pitch, time + i * args.separation, args.duration, args.volume)
+
+    with args.out as file:
+        midi.writeFile(args.out)
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
