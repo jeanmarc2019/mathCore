@@ -1,6 +1,32 @@
 # Math CORE
 
-## Example
+Generate yourself some mathcore midi files using custom highly mathematical sequences
+
+## Prerequisites
+
+The following external libraries are required to run the mathcore scripts:
+
+* Python3, pip
+* jq
+* midiutil
+
+The following commands will get you up and running:
+
+```bash
+brew install python3
+```
+
+```bash
+brew install jq
+```
+
+```bash
+pip3 install midiutil
+```
+
+## Examples
+
+Use the following bash commands to generate midi using one of the strategies below:
 
 ### Download sequence from OEIS...
 
