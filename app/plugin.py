@@ -29,7 +29,7 @@ def parse_argv(argv):
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("seq", help="the sequence name", choices=choices)
     parser.add_argument("n", help="the number of sequence elements to generate", type=int)
-    parser.add_argument("-kwargs", help="the space-separated list of key-value pairs passed to the sequence generator", default="")
+    parser.add_argument("-kwargs", help="the '='-delimited key-value pairs passed to the sequence generator function", nargs="+", default="")
     args = parser.parse_args(argv)
     return args
 
@@ -39,7 +39,7 @@ def signal_handler(sig, frame):
 
 def main(argv):
     args = parse_argv(argv[1:])
-    kwargs = dict(ele.split("=") for ele in args.kwargs.split(" ")) if args.kwargs else {}
+    kwargs = dict(ele.split("=") for ele in args.kwargs) if args.kwargs else {}
     print(*generate_sequence(choices[args.seq], args.n, kwargs), sep="\n")
     return 0
 
